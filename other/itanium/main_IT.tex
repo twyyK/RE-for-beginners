@@ -2,32 +2,32 @@
 \label{itanium}
 \myindex{Itanium}
 
-Although almost failed, Intel Itanium (\ac{IA64}) is a very interesting architecture.
+Anche se fallita, Intel Itanium (\ac{IA64}) è un'architettura molto interessante.
 
-While \ac{OOE} CPUs decides how to rearrange their instructions and execute them in parallel,
-\ac{EPIC} was an attempt to shift these decisions to the compiler:
-to let it group the instructions at the compile stage.
+Mentre le \ac{OOE} CPU decidono come riordinare le istruzioni ed eseguirle contemporaneamente,
+\ac{EPIC} era un tentativo di spostare queste decisioni al compilatore:
+per raggruppare le istruzioni alla fase di compilazione.
 
-This resulted in notoriously complex compilers.
+Questo implica a sua volta compilatori più complessi.
 
-Here is one sample of \ac{IA64} code: simple cryptographic algorithm from the Linux kernel:
+Ecco un esempio di codice \ac{IA64}: un semplice algoritmo criptografico dal kernel di Linux:
 
 \lstinputlisting[caption=Linux kernel 3.2.0.4]{other/itanium/tea_from_linux.c}
 
-Here is how it was compiled:
+Ed ecco come è stato compilato:
 
 \lstinputlisting[caption=Linux Kernel 3.2.0.4 for Itanium 2 (McKinley)]{other/itanium/ia64_linux_3.2.0.4_mckinley.lst}
 
-First of all, all \ac{IA64} instructions are grouped into 3-instruction bundles.
+Per iniziare, tutte le istruzioni \ac{IA64} sono raggruppate in 3 gruppi.
 
-Each bundle has a size of 16 bytes (128 bits) and consists of template code (5 bits) + 3 instructions (41 bits for each).
+Ogni gruppo ha una grandezza di 16 bytes (128 bits) e consiste nel modello di 3 codici (5 bits) + 3 istruzioni (41 bits ciascuno).
 
-\IDA shows the bundles as 6+6+4 bytes~---you can easily spot the pattern.
+\IDA mostra i gruppi come 6+6+4 bytes~---dove puoi facilmente individuare il modello.
 
-All 3 instructions from each bundle usually executes simultaneously, unless one of instructions has a \q{stop bit}.
+Tutte e 3 le istruzioni da ciascun gruppo, di solito si eseguono simultaneamente, finche una delle istruzioni ha un \q{stop bit}.
 
-Supposedly, Intel and HP engineers gathered statistics on most frequent instruction patterns and decided to bring
-bundle types (\ac{AKA} \q{templates}): a bundle code defines the instruction types in the bundle.
+Supponiamo che gli ingegneri di Intel e HP raccolgono statistiche sui modelli delle istruzioni più frequenti e decidono di portare
+dei tipi di modelli: a bundle code defines the instruction types in the bundle.
 There are 12 of them.
 
 For example, the zeroth bundle type is \TT{MII}, which implies 
